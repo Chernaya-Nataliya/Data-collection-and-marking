@@ -142,7 +142,10 @@ df = pd.DataFrame({
     'Description': descriptions
 })
 
+# Фильтруем книги, у которых в наличии только 19 штук
+filtered_books = df[df['Availability'] == 19]
+
 # Сохраняем DataFrame в JSON файл
-df.to_json('books_data1.json', orient='records')
+filtered_books.to_json('books_data1.json', orient='records')
 
 print("Данные сохранены в JSON файл 'books_data1.json'")
