@@ -7,12 +7,13 @@ client = Client(host='localhost', port=9000)
 # Создание таблицы для хранения книг
 client.execute('''
     CREATE TABLE IF NOT EXISTS books (
+        id String,       
         Name String,
         Price Float64,
         Availability UInt32,
         Description String
     ) ENGINE = MergeTree()
-    ORDER BY Name
+    ORDER BY id
 ''')
 
 # Чтение данных из JSON файла
