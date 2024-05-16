@@ -14,7 +14,7 @@ class UnsplashcomSpider(scrapy.Spider):
 
      Методы:
     - parse(self, response): Функция парсит категории рисунков,
-    - img_parse(self, response): Функция парсит рисунки в категории.
+    - foto_parse(self, response): Функция парсит рисунки в категории.
     """
 
     name = "unsplashcom"
