@@ -11,7 +11,11 @@
 # Библиотеки:
 
 pip install pandas
+
 pip install distfit
+
 pip install plotly_express==0.4.0
+
 pip install seaborn
+
 pip install -U scikit-learn
