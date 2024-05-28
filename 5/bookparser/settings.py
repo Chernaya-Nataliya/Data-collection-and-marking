@@ -91,4 +91,8 @@ ITEM_PIPELINES = {
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+FEED_FORMAT = 'json'
+# Имя выходного файла
+FEED_URI = 'books.json'
+FEED_EXPORT_INDENT = 4
 FEED_EXPORT_ENCODING = "utf-8"

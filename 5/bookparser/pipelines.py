@@ -5,6 +5,8 @@
 
 
 # useful for handling different item types with a single interface
+# pipelines.py
+# pipelines.py
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 
@@ -25,8 +27,11 @@ class BookparserPipeline:
             item['_id'] = None
 
         # Обработка названия книги
-        _, name = item.get('name').split(':')
-        item['name'] = name.strip()
+        try:
+            _, name = item.get('name').split(':')
+            item['name'] = name.strip()
+        except ValueError:
+            item['name'] = item.get('name', '').strip()
 
         # Обработка авторов книги
         item['author'] = ', '.join(item['author'])
@@ -47,7 +52,7 @@ class BookparserPipeline:
         try:
             *_, year, _ = item['year'][1].split(' ')
             item['year'] = int(year)
-        except ValueError:
+        except (ValueError, IndexError):
             item['year'] = None
 
         # Обработка серии
@@ -63,7 +68,7 @@ class BookparserPipeline:
         try:
             *_, weight, _ = item['weight'].split(' ')
             item['weight'] = int(weight)
-        except ValueError:
+        except (ValueError, IndexError):
             item['weight'] = None
 
         # Обработка размеров книги
@@ -71,7 +76,7 @@ class BookparserPipeline:
             *_, dimensions, _ = item['dimensions'].split(' ')
             length, width, height = dimensions.split('x')
             item['dimensions'] = {'length': int(length), 'width': int(width), 'height': int(height)}
-        except ValueError:
+        except (ValueError, IndexError):
             item['dimensions'] = {'length': None, 'width': None, 'height': None}
 
         # Обработка рейтинга книги
@@ -87,10 +92,10 @@ class BookparserPipeline:
             item['price'] = None
 
         try:
-            # Добавляем запись в базу данных
-            collection.insert_one(item)
-        except ValueError:
-            print('Ошибка добавления документа')
+            # Добавляем или обновляем запись в базе данных
+            collection.update_one({'_id': item['_id']}, {'$set': item}, upsert=True)
+        except Exception as e:
+            print(f'Ошибка добавления или обновления документа: {e}')
 
         # Выводим информацию о состоянии процесса
         self.count_page += 1
